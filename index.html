@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SLOPkit — PS5 WebKit Toolkit</title>
+  <link rel="stylesheet" href="main.css?v=custom-ui-1">
+</head>
+<body>
+  <header class="topbar compact">
+    <div>
+      <div class="brand">SLOP<span>kit</span><small>v0.4</small></div>
+      <div class="subtitle">WEBKIT TOOLKIT / SELF-HOSTED</div>
+    </div>
+    <div class="fw-box">
+      <span>Firmware</span>
+      <strong id="current-fw">Detecting…</strong>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="SLOPkit sections">
+    <button class="tab active" data-tab="home">Home</button>
+    <button class="tab" data-tab="tools">Tools</button>
+    <button class="tab" data-tab="catalog">Catalog</button>
+    <button class="tab" data-tab="misc">Misc / Web</button>
+    <button class="tab" data-tab="about">About</button>
+  </nav>
+  <div class="status-strip">
+    <span><i class="status-dot" id="strip-dot"></i><b id="strip-state">READY</b></span>
+    <span>FW <b id="strip-fw">—</b></span>
+    <span id="strip-catalog">CATALOG —</span>
+  </div>
+
+  <main>
+    <section class="view active" id="view-home">
+      <div class="hero compact-hero">
+        <div class="eyebrow">SLOPKIT / WEBKIT</div>
+        <h1>SLOPkit</h1>
+        <p>Firmware-aware frontend. Original project entry points preserved.</p>
+        <div class="status-row">
+          <span class="status-dot" id="server-dot"></span>
+          <span id="server-status">Catalog: checking…</span>
+          <span class="pill" id="tool-count">0 tools</span>
+        </div>
+      </div>
+
+      <div class="quick-row">
+        <button class="quick" data-jump="catalog">CATALOG</button>
+        <button class="quick" data-jump="misc">WEB / SEARCH</button>
+        <button class="quick" data-jump="tools">TOOLS</button>
+      </div>
+
+      <div class="feature-grid">
+        <article class="action-card primary">
+          <div class="card-icon">⚡</div>
+          <h2>Jailbreak</h2>
+          <p>Original project entry point retained from the supplied source.</p>
+          <a class="action" id="run-jb"
+             href="slopkit/poops.html?go=1&amp;auto=1&amp;production=1&amp;trigger=netcontrol&amp;attempts=8&amp;only=ps0_preflight,ps1_prepare,ps3_stage0,ps4_validate,ps5_stage1,ps6_stage2,ps8_stage3,ps9_stage4,ps10_stage5&amp;log=debug&amp;payload=1&amp;v=final">Jailbreak</a>
+        </article>
+
+        <article class="action-card">
+          <div class="card-icon">⇄</div>
+          <h2>Payloads (sender)</h2>
+          <p>Original sender entry point retained unchanged.</p>
+          <a class="action secondary" id="run-sender"
+             href="slopkit/poops.html?go=1&amp;auto=1&amp;production=1&amp;trigger=netcontrol&amp;attempts=8&amp;only=ps0_preflight,ps1_prepare,ps3_stage0,ps4_validate,ps5_stage1,ps6_stage2,ps8_stage3,ps9_stage4,ps10_stage5&amp;log=debug&amp;payload=1&amp;reuse=1&amp;v=final">Payloads (sender)</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="view" id="view-tools">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">TOOLBOX</div>
+          <h2>Tools</h2>
+        </div>
+        <span class="pill">Firmware: <b id="tools-fw">—</b></span>
+      </div>
+      <div class="feature-grid compact">
+        <article class="info-card"><b>Firmware detection</b><p>Reads the PlayStation 5 firmware value exposed by the browser user agent.</p></article>
+        <article class="info-card"><b>Original sender</b><p>The supplied project's sender control remains available from Home.</p></article>
+        <article class="info-card"><b>Release catalog</b><p>Browse the GitHub Pages-hosted release metadata from Catalog.</p></article>
+        <article class="info-card"><b>Server status</b><p>Checks the hosted catalog and falls back to cached metadata when available.</p></article>
+      </div>
+    </section>
+
+    <section class="view" id="view-catalog">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">SELF-HOSTED</div>
+          <h2>Payload / Tool Catalog</h2>
+        </div>
+        <button class="small-btn" id="refresh-catalog">↻ Refresh</button>
+      </div>
+      <div class="catalog-filter"><input id="catalog-search" type="search" placeholder="Filter tools…"></div>
+      <div class="catalog-meta">
+        <span id="catalog-status">Loading catalog…</span>
+        <span id="catalog-endpoint">./catalog/releases.json</span>
+      </div>
+      <div class="update-summary">
+        <div><span>AVAILABLE</span><b id="update-count">0</b></div>
+        <div><span>COMPATIBLE</span><b id="compatible-count">0</b></div>
+        <div><span>CATALOG</span><b id="catalog-version">—</b></div>
+      </div>
+      <div id="catalog-grid" class="catalog-grid"></div>
+    </section>
+
+    <section class="view" id="view-misc">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">WEB</div>
+          <h2>Misc / Web</h2>
+        </div>
+      </div>
+      <div class="search-box">
+        <input id="search-query" type="search" placeholder="Search the web…" autocomplete="off">
+        <select id="search-provider" aria-label="Search provider">
+          <option value="https://duckduckgo.com/?q=">DuckDuckGo</option>
+          <option value="https://search.brave.com/search?q=">Brave Search</option>
+          <option value="https://www.google.com/search?q=">Google</option>
+          <option value="https://www.bing.com/search?q=">Bing</option>
+          <option value="https://www.startpage.com/sp/search?query=">Startpage</option>
+          <option value="https://www.ecosia.org/search?q=">Ecosia</option>
+          <option value="https://www.qwant.com/?q=">Qwant</option>
+          <option value="https://search.yahoo.com/search?p=">Yahoo</option>
+        </select>
+        <button class="small-btn" id="search-btn">Search</button>
+      </div>
+      <div class="site-grid">
+        <a class="site-card" href="https://duckduckgo.com/" target="_blank" rel="noopener"><b>DuckDuckGo</b><span>Private search</span></a>
+        <a class="site-card" href="https://search.brave.com/" target="_blank" rel="noopener"><b>Brave Search</b><span>Independent search</span></a>
+        <a class="site-card" href="https://www.google.com/" target="_blank" rel="noopener"><b>Google</b><span>Web search</span></a>
+        <a class="site-card" href="https://www.bing.com/" target="_blank" rel="noopener"><b>Bing</b><span>Web search</span></a>
+        <a class="site-card" href="https://www.startpage.com/" target="_blank" rel="noopener"><b>Startpage</b><span>Privacy-focused search</span></a>
+        <a class="site-card" href="https://www.ecosia.org/" target="_blank" rel="noopener"><b>Ecosia</b><span>Search engine</span></a>
+        <a class="site-card" href="https://www.qwant.com/" target="_blank" rel="noopener"><b>Qwant</b><span>Privacy-focused search</span></a>
+        <a class="site-card" href="https://search.yahoo.com/" target="_blank" rel="noopener"><b>Yahoo</b><span>Web search</span></a>
+      </div>
+      <div class="direct-box">
+        <input id="direct-url" type="url" placeholder="https://example.com">
+        <button class="small-btn" id="open-url">Open</button>
+      </div>
+    </section>
+
+    <section class="view" id="view-about">
+      <div class="section-head"><div><div class="eyebrow">PROJECT</div><h2>About SLOPkit</h2></div></div>
+      <article class="info-card about">
+        <p>This custom presentation layer is based on the supplied SLOPkit source. The original project files under <code>slopkit/</code>, firmware offsets, and payload assets are retained as supplied.</p>
+        <p>Credits from the supplied project are preserved below.</p>
+        <p class="credits">Jordy, Egy, Sonic, Yenyen, Zeco, Gezine, Echostretch, Ufm42, TheFloW, John Tornblom, Flatz, Idlesauce and PS5 R&amp;D Discord.</p>
+        <p class="muted">Custom UI revision: SLOPkit UI 1.0</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <span>SLOPkit</span>
+    <span id="footer-status">GitHub Pages catalog ready</span>
+  </footer>
+
+<script>
+(() => {
+  const CATALOG_URL = "./catalog/releases.json";
+  const tabs = [...document.querySelectorAll(".tab")];
+  const views = [...document.querySelectorAll(".view")];
+
+  function showTab(name) {
+    tabs.forEach(t => t.classList.toggle("active", t.dataset.tab === name));
+    views.forEach(v => v.classList.toggle("active", v.id === "view-" + name));
+  }
+  tabs.forEach(t => t.addEventListener("click", () => showTab(t.dataset.tab)));
+
+  function detectFirmware() {
+    try {
+      const m = /PlayStation 5\/(\d+\.\d+)/.exec(navigator.userAgent);
+      return m ? m[1] : "";
+    } catch (_) { return ""; }
+  }
+  const firmware = detectFirmware() || "Not detected";
+  document.getElementById("strip-fw").textContent = firmware;
+  document.getElementById("current-fw").textContent = firmware;
+  document.getElementById("tools-fw").textContent = firmware;
+
+  function firmwareMatches(list, fw) {
+    if (!Array.isArray(list) || !list.length || list.includes("*")) return true;
+    return list.some(x => String(x) === String(fw));
+  }
+
+  function normalizeTools(data) {
+    // Supports the current SLOPkit catalog schema: { tools: { ... } }
+    if (data && data.tools && typeof data.tools === "object") return data.tools;
+
+    // Also accepts the older flat catalog format.
+    if (data && typeof data === "object") {
+      const out = {};
+      for (const [id, value] of Object.entries(data)) {
+        if (["schemaVersion","appVersion","generatedAt","source","firmwareWildcard"].includes(id)) continue;
+        if (Array.isArray(value)) {
+          out[id] = { name: id, category: "Other", releases: value };
+        } else if (value && typeof value === "object" && Array.isArray(value.releases)) {
+          out[id] = value;
+        }
+      }
+      return out;
+    }
+    return {};
+  }
+
+  function renderCatalog(data) {
+    const grid = document.getElementById("catalog-grid");
+    grid.innerHTML = "";
+    const tools = data && data.tools ? data.tools : {};
+    const list = Object.values(tools);
+    const query = (document.getElementById("catalog-search")?.value || "").trim().toLowerCase();
+    const filtered = list.filter(tool => {
+      const hay = [tool.name, tool.category, ...(tool.releases || []).map(r => r.version)].join(" ").toLowerCase();
+      return !query || hay.includes(query);
+    });
+    const compatible = list.filter(tool =>
+      (tool.releases || []).some(r => firmwareMatches(r.firmware, firmware))
+    ).length;
+
+    document.getElementById("tool-count").textContent = list.length + " tools";
+    document.getElementById("update-count").textContent = list.length;
+    document.getElementById("compatible-count").textContent = compatible;
+    document.getElementById("catalog-version").textContent = data?.appVersion || "—";
+    document.getElementById("strip-catalog").textContent = "CATALOG " + list.length;
+    document.getElementById("catalog-status").textContent = list.length
+      ? filtered.length + " of " + list.length + " tools"
+      : "Catalog loaded — no releases listed";
+
+    if (!filtered.length) {
+      grid.innerHTML = '<div class="empty">No matching tools.</div>';
+      return;
+    }
+    filtered.forEach(tool => {
+      const card = document.createElement("article");
+      card.className = "catalog-card";
+      const releases = Array.isArray(tool.releases) ? tool.releases : [];
+      const compatibleRelease = releases.some(r => firmwareMatches(r.firmware, firmware));
+      card.innerHTML = `<div class="catalog-title"><b>${escapeHtml(tool.name || "Unnamed")}</b><span>${escapeHtml(tool.category || "OTHER")}</span></div>
+        <div class="catalog-status ${compatibleRelease ? "yes" : "no"}">${compatibleRelease ? "COMPATIBLE / " + escapeHtml(firmware) : "FIRMWARE NOT VERIFIED"}</div>
+        <div class="release-list">${releases.slice(0, 6).map(r =>
+          `<div><b>${escapeHtml(r.version || "unknown")}</b><span>${escapeHtml((r.status || "unknown").toUpperCase())} · ${escapeHtml(r.releaseDate || "")}</span></div>`
+        ).join("")}</div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  async function loadCatalog() {
+    const dot = document.getElementById("server-dot");
+    const status = document.getElementById("server-status");
+    try {
+      const r = await fetch(CATALOG_URL + "?v=" + Date.now(), { cache: "no-store" });
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      const data = await r.json();
+      localStorage.setItem("slopkitCatalog", JSON.stringify(data));
+      renderCatalog(data);
+      dot.classList.add("ok");
+      document.getElementById("strip-dot").classList.add("ok");
+      document.getElementById("strip-state").textContent = "ONLINE";
+      status.textContent = "Catalog: online";
+      document.getElementById("footer-status").textContent = "GitHub Pages catalog online";
+    } catch (e) {
+      const cached = localStorage.getItem("slopkitCatalog");
+      if (cached) {
+        try { renderCatalog(JSON.parse(cached)); } catch (_) {}
+        status.textContent = "Catalog: cached";
+      } else {
+        renderCatalog({tools:{}});
+        status.textContent = "Catalog: unavailable";
+      }
+      dot.classList.add("off");
+      document.getElementById("strip-dot").classList.add("off");
+      document.getElementById("strip-state").textContent = "OFFLINE";
+      document.getElementById("footer-status").textContent = "Catalog unavailable";
+    }
+  }
+
+  document.getElementById("refresh-catalog").addEventListener("click", loadCatalog);
+  document.getElementById("catalog-search").addEventListener("input", () => {
+    const cached = localStorage.getItem("slopkitCatalog");
+    if (cached) { try { renderCatalog(JSON.parse(cached)); } catch (_) {} }
+  });
+  document.querySelectorAll("[data-jump]").forEach(btn => {
+    btn.addEventListener("click", () => showTab(btn.dataset.jump));
+  });
+
+  document.getElementById("search-btn").addEventListener("click", () => {
+    const q = document.getElementById("search-query").value.trim();
+    if (!q) return;
+    const base = document.getElementById("search-provider").value;
+    location.href = base + encodeURIComponent(q);
+  });
+  document.getElementById("search-query").addEventListener("keydown", e => {
+    if (e.key === "Enter") document.getElementById("search-btn").click();
+  });
+  document.getElementById("open-url").addEventListener("click", () => {
+    let u = document.getElementById("direct-url").value.trim();
+    if (!u) return;
+    if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+    location.href = u;
+  });
+
+  loadCatalog();
+  try { document.getElementById("run-jb").focus(); } catch (_) {}
+})();
+</script>
+</body>
+</html>
